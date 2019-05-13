@@ -1,6 +1,6 @@
 # :herb: harpocrates
 
-(Ancient Greek: Ἁρποκράτης) was the god of silence, secrets and confidentiality in the Hellenistic religion.
+(Ancient Greek: [Ἁρποκράτης](https://en.wikipedia.org/wiki/Harpocrates)) was the god of silence, secrets and confidentiality in the Hellenistic religion.
 
 
 Harpocrates protects your data by protecting you from yourself. 
