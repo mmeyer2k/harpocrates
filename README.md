@@ -4,15 +4,19 @@
 
 [DOWNLOAD LATEST BUILD](https://github.com/mmeyer2k/harpocrates/blob/master/bin/Debug/Harpocrates.dll?raw=true)
 
-Harpocrates protects your data by protecting you from yourself. 
-The most secure options are chosen by default.
-HMAC validation checksum and initialization vector are packed with the ciphertext for easy storage of a single string.
-Even the password hardening cost is encrypted and added to the ciphertext.
-This API consumes and returns only strings.
+Many of the .NET encryption code examples to be found online are **flawed**.
+Harpocrates protects your data by protecting you from yourself.
 
-**MANY .NET ENCRYPTION CODE EXAMPLES YOU FIND ONLINE ARE FLAWED**
+## Features
+- The most secure options are chosen by default
+- Message authenticity is verified before decryption by comparing SHA-256 hashes
+- Strongly random initialization vectors are generated
+- Optional key hardening to prevent brute force attacks
+- Hardening parameter is stream encrypted added to ciphertext
+- DoS attacks against the password cost value are prevented by the checksum step
+- API consumes and produces only strings
 
-A basic usage of Harpocrates can be seen below.
+## Using Harpocrates
 
 ```csharp
 string Password = "a password to en/decrypt with";
