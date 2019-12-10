@@ -9,12 +9,10 @@ Harpocrates protects your data by protecting you from yourself.
 
 ## Features
 - The most secure options are chosen by default
+- Separate key derivation for HMAC and AES
 - Message authenticity is verified before decryption by comparing SHA-256 hashes
-- Strongly random initialization vectors are generated
-- Optional key hardening to prevent brute force attacks
-- Hardening parameter is stream encrypted added to ciphertext
-- DoS attacks against the password cost value are prevented by the checksum step
-- API consumes and produces only strings
+- Uses strongly random initialization vectors
+- Configurable key hardening to prevent brute force attacks
 
 ## Using Harpocrates
 
