@@ -24,22 +24,11 @@ namespace Harpocrates
             // Let us assume that plaintext contains UTF8-encoded characters.
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 
-            // First, we must create a password, from which the key will be derived.
-            // This password will be generated from the specified passphrase and 
-            // salt value. The password will be created using the specified hash 
-            // algorithm. Password creation can be done in several iterations.
-            PasswordDeriveBytes password = new PasswordDeriveBytes
-            (
-                secret,
-                initVectorBytes,
-                "SHA256",
-                Convert.ToInt32(iterations)
-            );
+            // Initialize the key manager
+            KeyManager keyManager = new KeyManager(secret, initVectorBytes, iterations);
 
-            // Use the password to generate pseudo-random bytes for the encryption
-            // key. Specify the size of the key in bytes (instead of bits).
-            int keySize = 128;
-            byte[] keyBytes = password.GetBytes(keySize / 8);
+            // Derive the crypto key
+            byte[] keyBytes = keyManager.deriveKeyForCrypto();
 
             // Create uninitialized Rijndael encryption object.
             RijndaelManaged symmetricKey = new RijndaelManaged();
@@ -82,19 +71,13 @@ namespace Harpocrates
             cryptoStream.Close();
 
             // Create a hmac object based on our secret key
-            HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
+            keyBytes = keyManager.deriveKeyForHmac();
+            HMACSHA256 hmac = new HMACSHA256(keyBytes);
 
-            // Add iterations number as 4 bytes to front of ciphertext
-            // Encrypt this value by XORing it with 4 bytes derived from
-            // hashing the key with the iv
-            byte[] iterationBytes = BitConverter.GetBytes(iterations);
-            iterationBytes = XorIterationsArray(iterationBytes, initVectorBytes, hmac);
-            cipherTextBytes = Combine(iterationBytes, cipherTextBytes);
-
-            // Add IV to front of iterations+message
+            // Append iv to front of message
             cipherTextBytes = Combine(initVectorBytes, cipherTextBytes);
 
-            // Calculate checksum of iv+iterations+message
+            // Calculate checksum of iv + message
             byte[] checksum = hmac.ComputeHash(cipherTextBytes);
 
             // Add checksum to very front of ciphertext message
@@ -107,22 +90,27 @@ namespace Harpocrates
         public static string Decrypt
         (
             string cipherText,
-            string secret
+            string secret,
+            UInt32 iterations = 1
         )
         {
             // Convert our ciphertext into a byte array
             byte[] rawBytes = Convert.FromBase64String(cipherText);
 
-            // Extract iv, checksum and iterations count out of ciphertext
-            // There are more cpu-friendly ways to do this but this is most readable
+            // Separate the parts of the cipher text
             byte[] checksum = rawBytes.Take(32).ToArray();
             byte[] initVectorBytes = rawBytes.Skip(32).Take(16).ToArray();
-            byte[] iterations = rawBytes.Skip(48).Take(4).ToArray();
-            byte[] cipherTextBytes = rawBytes.Skip(52).ToArray();
+            byte[] cipherTextBytes = rawBytes.Skip(48).ToArray();
+
+            // Initialize the key manager
+            KeyManager keyManager = new KeyManager(secret, initVectorBytes, iterations);
+
+            // Create a hmac object based on our secret key
+            byte[] keyBytes = keyManager.deriveKeyForHmac();
+            HMACSHA256 hmac = new HMACSHA256(keyBytes);
 
             // Calculate the hash sent against the rest of the payload by splitting the
             // cipher text after the 32nd byte
-            HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
             byte[] checksumCalculated = hmac.ComputeHash(rawBytes.Skip(32).ToArray());
 
             if (checksum.SequenceEqual(checksumCalculated) == false)
@@ -130,33 +118,15 @@ namespace Harpocrates
                 throw new Exception("Ciphertext checksum does not match calculated value");
             }
 
-            // Unencrypt the iterations value
-            iterations = XorIterationsArray(iterations, initVectorBytes, hmac);
-
-            // First, we must create a password, from which the key will be 
-            // derived. This password will be generated from the specified 
-            // passphrase and salt value. The password will be created using
-            // the specified hash algorithm. Password creation can be done in
-            // several iterations.
-            PasswordDeriveBytes password = new PasswordDeriveBytes
-            (
-                secret,
-                initVectorBytes,
-                "SHA256",
-                BitConverter.ToInt32(iterations, 0)
-            );
-
-            // Use the password to generate pseudo-random bytes for the encryption
-            // key. Specify the size of the key in bytes (instead of bits).
-            int keySize = 128;
-            byte[] keyBytes = password.GetBytes(keySize / 8);
-
             // Create uninitialized Rijndael encryption object.
             RijndaelManaged symmetricKey = new RijndaelManaged();
 
             // It is reasonable to set encryption mode to Cipher Block Chaining
             // (CBC). Use default options for other symmetric key parameters.
             symmetricKey.Mode = CipherMode.CBC;
+
+            // Derive the crypto key
+            keyBytes = keyManager.deriveKeyForCrypto();
 
             // Generate decryptor from the existing key bytes and initialization 
             // vector. Key size will be defined based on the number of the key 
@@ -216,18 +186,6 @@ namespace Harpocrates
             Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
 
             return ret;
-        }
-
-        private static byte[] XorIterationsArray(byte[] iterationBytes, byte[] iv, HMACSHA256 hmac)
-        {
-            byte[] iterationMask = hmac.ComputeHash(iv).Take(4).ToArray();
-
-            iterationBytes[0] = (byte)(iterationBytes[0] ^ iterationMask[0]);
-            iterationBytes[1] = (byte)(iterationBytes[1] ^ iterationMask[1]);
-            iterationBytes[2] = (byte)(iterationBytes[2] ^ iterationMask[2]);
-            iterationBytes[3] = (byte)(iterationBytes[3] ^ iterationMask[3]);
-
-            return iterationBytes;
         }
     }
 }
