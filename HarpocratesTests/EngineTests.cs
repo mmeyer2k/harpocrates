@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Security.Cryptography;
 
 namespace Harpocrates.Tests
 {
@@ -47,9 +48,17 @@ namespace Harpocrates.Tests
         }
 
         [TestMethod()]
-        public void DecryptTest()
+        public void EncryptTestRandomInput()
         {
-            Assert.AreEqual(1, 1);
+            byte[] random = new byte[4096];
+            RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(random);
+
+            string a = random.ToString();
+            string b = Harpocrates.Engine.Encrypt(a, "BBBB");
+            string c = Harpocrates.Engine.Decrypt(b, "BBBB");
+
+            Assert.AreEqual(a, c);
         }
     }
 }

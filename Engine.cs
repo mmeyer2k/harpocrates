@@ -22,7 +22,7 @@ namespace Harpocrates
 
             // Convert our plaintext into a byte array.
             // Let us assume that plaintext contains UTF8-encoded characters.
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            byte[] plainTextBytes = Encoding.ASCII.GetBytes(plainText);
 
             // Initialize the key manager
             KeyManager keyManager = new KeyManager(secret, initVectorBytes, iterations);
