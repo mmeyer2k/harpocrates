@@ -2,7 +2,7 @@
 
 (Ancient Greek: [Ἁρποκράτης](https://en.wikipedia.org/wiki/Harpocrates)) was the god of silence, secrets and confidentiality in the Hellenistic religion.
 
-[DOWNLOAD LATEST BUILD](https://github.com/mmeyer2k/harpocrates/blob/master/bin/Debug/Harpocrates.dll?raw=true)
+[DOWNLOAD LATEST RELEASE DLL (1.0.0)](https://github.com/mmeyer2k/harpocrates/releases/download/1.0.0/Harpocrates.dll)
 
 Many of the .NET encryption code examples to be found online are **flawed**.
 Harpocrates protects your data by protecting you from yourself.
@@ -19,15 +19,13 @@ Harpocrates protects your data by protecting you from yourself.
 ## Using Harpocrates
 
 ```csharp
-string Password = "a password to en/decrypt with";
-
-string Ciphertext = Harpocrates.Engine.Encrypt("some data to encrypt", Password);
-string OriginalText = Harpocrates.Engine.Decrypt(Ciphertext, Password);
+string encrypted = Harpocrates.Engine.Encrypt("secret!", "password");
+string plaintext = Harpocrates.Engine.Decrypt(encrypted, "password");
 ```
 
 Hardening the password with PBKDF2 helps prevent brute force attacks.
-The value of the cost parameter is encrypted and stored with the ciphertext so it does not need to be referenced during decryption.
+Pass a third parameter to specify the number of iterations.
 ```csharp
-string Ciphertext = Harpocrates.Engine.Encrypt(Data, Password, 999999);
-string OriginalText = Harpocrates.Engine.Decrypt(Ciphertext, Password);
+string encrypted = Harpocrates.Engine.Encrypt("secret!", "password", 10000);
+string plaintext = Harpocrates.Engine.Decrypt(encrypted, "password", 10000);
 ```
