@@ -1,0 +1,5 @@
+[1.0.0]
++ Use separate keys for crypto and hmac
++ No longer encode iterations in cyphertext
++ Add unit tests
++ Good enough for first stable release
