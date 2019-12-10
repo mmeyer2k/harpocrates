@@ -3,3 +3,5 @@ obj/*
 bin/Debug/Harpocrates.pdb
 packages/*
 bin/*
+HarpocratesTests/bin/*
+HarpocratesTests/obj/*
