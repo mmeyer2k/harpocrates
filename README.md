@@ -1,5 +1,4 @@
 # :herb: Harpocrates
-
 Bulletproof symmetric encryption library for .NET Framework.
 Many of the .NET encryption code examples to be found online are **flawed**.
 Harpocrates protects your data by protecting you from yourself.
@@ -22,7 +21,6 @@ or download the latest [DLL (1.1.0)](https://github.com/mmeyer2k/harpocrates/rel
 - Configurable key hardening to prevent brute force attacks
 
 ## Using Harpocrates
-
 ```csharp
 string encrypted = Harpocrates.Engine.Encrypt("secret!", "password");
 string plaintext = Harpocrates.Engine.Decrypt(encrypted, "password");
