@@ -1,11 +1,10 @@
 # :herb: Harpocrates
 
-(Ancient Greek: [Ἁρποκράτης](https://en.wikipedia.org/wiki/Harpocrates)) was the god of silence, secrets and confidentiality in the Hellenistic religion.
-
-[changelog](https://github.com/mmeyer2k/harpocrates/blob/master/changelog.txt)
-
+Bulletproof symmetric encryption library for .NET Framework.
 Many of the .NET encryption code examples to be found online are **flawed**.
 Harpocrates protects your data by protecting you from yourself.
+
+(Ancient Greek: [Ἁρποκράτης](https://en.wikipedia.org/wiki/Harpocrates)) was the god of silence, secrets and confidentiality in the Hellenistic religion.
 
 ## Install
 Using the nuget package manager...
