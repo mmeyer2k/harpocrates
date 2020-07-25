@@ -31,7 +31,7 @@ namespace Harpocrates
             byte[] keyBytes = keyManager.deriveKeyForCrypto();
 
             // Create uninitialized Rijndael encryption object.
-            RijndaelManaged symmetricKey = new RijndaelManaged();
+            AesManaged symmetricKey = new AesManaged();
 
             // It is reasonable to set encryption mode to Cipher Block Chaining
             // (CBC). Use default options for other symmetric key parameters.
@@ -119,7 +119,7 @@ namespace Harpocrates
             }
 
             // Create uninitialized Rijndael encryption object.
-            RijndaelManaged symmetricKey = new RijndaelManaged();
+            AesManaged symmetricKey = new AesManaged();
 
             // It is reasonable to set encryption mode to Cipher Block Chaining
             // (CBC). Use default options for other symmetric key parameters.

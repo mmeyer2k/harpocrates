@@ -15,6 +15,11 @@ namespace Harpocrates
 
         public KeyManager(string secret, byte[] iv, UInt32 iterations)
         {
+            if (secret.Length < 32)
+            {
+                throw new Exception("Key must contain at least 32 bytes");
+            }
+
             this.secret = secret;
             this.iv = iv;
             this.iterations = iterations;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.1.0</version>
+    <title>Harpocrates</title>
+    <authors>mmeyer2k</authors>
+    <owners>mmeyer2k</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/mmeyer2k/harpocrates</projectUrl>
+    <description>This package provides robust symmetric AES256 encryption with a simple to consume API.</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>symmetric encryption aes aes-256 aes-256-cbc</tags>
+  </metadata>
+</package>

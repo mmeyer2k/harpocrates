@@ -6,12 +6,14 @@ namespace Harpocrates.Tests
     [TestClass()]
     public class EngineTests
     {
+        string a = "AAAA";
+        string password = "PaSsWoRdPaSsWoRdPaSsWoRdPaSsWoRd";
+
         [TestMethod()]
         public void EncryptTest()
         {
-            string a = "AAAA";
-            string b = Harpocrates.Engine.Encrypt(a, "BBBB");
-            string c = Harpocrates.Engine.Decrypt(b, "BBBB");
+            string b = Harpocrates.Engine.Encrypt(a, password);
+            string c = Harpocrates.Engine.Decrypt(b, password);
 
             Assert.AreEqual(a, c);
         }
@@ -19,9 +21,8 @@ namespace Harpocrates.Tests
         [TestMethod()]
         public void EncryptTestHigherIterations()
         {
-            string a = "AAAA";
-            string b = Harpocrates.Engine.Encrypt(a, "BBBB", 10000);
-            string c = Harpocrates.Engine.Decrypt(b, "BBBB", 10000);
+            string b = Harpocrates.Engine.Encrypt(a, password, 10000);
+            string c = Harpocrates.Engine.Decrypt(b, password, 10000);
 
             Assert.AreEqual(a, c);
         }
@@ -30,9 +31,8 @@ namespace Harpocrates.Tests
         [ExpectedException(typeof(System.Exception))]
         public void EncryptTestIterationMismatch()
         {
-            string a = "AAAA";
-            string b = Harpocrates.Engine.Encrypt(a, "BBBB", 10001);
-            string c = Harpocrates.Engine.Decrypt(b, "BBBB", 10000);
+            string b = Harpocrates.Engine.Encrypt(a, password, 10001);
+            string c = Harpocrates.Engine.Decrypt(b, password, 10000);
 
             Assert.AreEqual(a, c);
         }
@@ -41,8 +41,7 @@ namespace Harpocrates.Tests
         [ExpectedException(typeof(System.Exception))]
         public void EncryptTestBadCiphertext()
         {
-            string a = "AAAA";
-            string c = Harpocrates.Engine.Decrypt(a, "BBBB", 10000);
+            string c = Harpocrates.Engine.Decrypt(a, password, 10000);
 
             Assert.AreEqual(a, c);
         }
@@ -55,10 +54,20 @@ namespace Harpocrates.Tests
             rng.GetBytes(random);
 
             string a = random.ToString();
-            string b = Harpocrates.Engine.Encrypt(a, "BBBB");
-            string c = Harpocrates.Engine.Decrypt(b, "BBBB");
+            string b = Harpocrates.Engine.Encrypt(a, password);
+            string c = Harpocrates.Engine.Decrypt(b, password);
 
             Assert.AreEqual(a, c);
+        }
+
+        [TestMethod()]
+        public void KnownVectorTest()
+        {
+            string vector = "rbEg3TXw1Hl3uHFKY+pGhW7VYziGfoHYsimuUcfBdW/jXT04qogqzfy7iez1CN4S19aI47g/XeiHad6Q3VE0dA==";
+
+            string d = Harpocrates.Engine.Decrypt(vector, password);
+
+            Assert.AreEqual(d, a);
         }
     }
 }
